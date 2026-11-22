@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>حاسبة المعدل الجامعي</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <h1>حاسبة المعدل الجامعي (الساعات المعتمدة)</h1>
+
+    <!-- قسم إدخال بيانات المادة -->
+    <div>
+        <input type="text" id="subjectName" placeholder="اسم المادة (مثلاً: برمجة 2)">
+        <input type="number" id="subjectGrade" placeholder="العلامة (من 100)" min="0" max="100">
+        <input type="number" id="subjectHours" placeholder="عدد الساعات" min="1" max="3">
+            <br><br>
+            <button id="addBtn" class="add-btn">إضافة المادة</button>
+        </div>
+
+    
+
+    <br>
+
+    <!-- جدول عرض المواد المضافة -->
+    <table border="1" width="50%">
+        <thead>
+            <tr>
+                <th>المادة</th>
+                <th>العلامة</th>
+                <th>الساعات</th>
+                <th>النقاط</th>
+            </tr>
+        </thead>
+        <tbody id="subjectsList">
+            <!-- ستظهر المواد هنا لاحقاً بواسطة JavaScript -->
+        </tbody>
+    </table>
+
+    <br>
+
+    <!-- زر الحساب ومكان ظهور النتيجة -->
+    <button id="calcBtn">احسب المعدل التراكمي</button>
+    <h2 id="result">المعدل: --</h2>
+    
+    <h2 id="gradeText">التقدير: --</h2>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
