@@ -1,7 +1,4 @@
-
-  
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,8 +7,7 @@
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <!-- مكتبة تصوير الشاشة كصورة -->
+    <!-- الرابط الكامل لمكتبة تصوير الشاشة -->
     <script src="https://cloudflare.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,9 +17,9 @@
     <!-- ترويسة الجامعة -->
     <div class="uni-header">
         <button class="theme-toggle" id="themeBtn" data-html2canvas-ignore="true" title="تبديل الوضع الليلي">
-            <i class="fas fa-moon"></i>
+            🌙
         </button>
-        <h1><i class="fas fa-graduation-cap"></i> حاسبة المعدل التراكمي (GPA)</h1>
+        <h1>🎓 حاسبة المعدل التراكمي (GPA)</h1>
         <p>جامعة ماري الخاصة – وفق النظام الامتحاني والساعات المعتمدة</p>
     </div>
 
@@ -54,13 +50,13 @@
         </div>
     </div>
 
-    <!-- حقول الإدخال (مخفية عند التصوير لتظهر البطاقة نظيفة) -->
+    <!-- حقول الإدخال -->
     <div class="input-section" data-html2canvas-ignore="true">
         <input type="text" id="subjectName" placeholder="اسم المادة (مثلاً: برمجة 2)">
         <input type="number" id="subjectGrade" placeholder="العلامة (0 - 100)" min="0" max="100">
-        <input type="number" id="subjectHours" placeholder="الساعات (2-3)" min="2" max="3">
+        <input type="number" id="subjectHours" placeholder="الساعات (1 - 6)" min="1" max="6">
         <button id="addBtn" class="btn-primary">
-            <i class="fas fa-plus"></i> <span>إضافة</span>
+            <span>➕ إضافة</span>
         </button>
     </div>
 
@@ -83,10 +79,10 @@
 
     <!-- التذييل -->
     <div class="footer-bar">
-        <span> جامعة ماري 💻</span>
+        <span>تصميم وبرمجة: قسم الهندسة المعلوماتية – جامعة ماري 💻</span>
         <div class="footer-actions" data-html2canvas-ignore="true">
-            <button class="btn-export" id="exportBtn"><i class="fas fa-camera"></i> حفظ كصورة</button>
-            <button class="btn-clear" id="clearBtn"><i class="fas fa-trash-alt"></i> مسح الكل</button>
+            <button class="btn-export" id="exportBtn">📸 حفظ كصورة</button>
+            <button class="btn-clear" id="clearBtn">🗑️ مسح الكل</button>
         </div>
     </div>
 </div>
