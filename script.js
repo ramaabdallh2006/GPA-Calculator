@@ -1,7 +1,6 @@
 let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) || [];
 let editIndex = -1;
 
-// تحويل العلامة وفق نظام جامعة ماري
 function getGlobalGrade(grade) {
     if (grade >= 98) return { points: 4.00, letter: "A+", badge: "badge-a" };
     if (grade >= 95) return { points: 3.75, letter: "A", badge: "badge-a" };
@@ -64,9 +63,9 @@ function updateUI() {
                 <td><span class="badge ${info.badge}">${info.letter}</span></td>
                 <td>${sub.hours}</td>
                 <td>${qualityPoints}</td>
-                <td>
-                    <button class="action-btn btn-edit" onclick="editSubject(${index})" title="تعديل"><i class="fas fa-pen"></i></button>
-                    <button class="action-btn btn-delete" onclick="deleteSubject(${index})" title="حذف"><i class="fas fa-trash"></i></button>
+                <td data-html2canvas-ignore="true">
+                    <button class="action-btn btn-edit" onclick="editSubject(${index})" title="تعديل">✏️</button>
+                    <button class="action-btn btn-delete" onclick="deleteSubject(${index})" title="حذف">🗑️</button>
                 </td>
             </tr>
         `;
@@ -109,7 +108,7 @@ document.getElementById("addBtn").onclick = function() {
     } else {
         subjects[editIndex] = subjectData;
         editIndex = -1;
-        document.querySelector("#addBtn span").innerText = "إضافة";
+        document.querySelector("#addBtn span").innerText = "➕ إضافة";
     }
 
     document.getElementById("subjectName").value = "";
@@ -124,7 +123,7 @@ function editSubject(index) {
     document.getElementById("subjectGrade").value = sub.grade;
     document.getElementById("subjectHours").value = sub.hours;
     editIndex = index;
-    document.querySelector("#addBtn span").innerText = "حفظ التعديل";
+    document.querySelector("#addBtn span").innerText = "💾 حفظ التعديل";
     document.getElementById("subjectName").focus();
 }
 
@@ -142,49 +141,39 @@ document.getElementById("clearBtn").onclick = function() {
 
 document.getElementById("themeBtn").onclick = function() {
     document.body.classList.toggle("dark-mode");
-    const icon = this.querySelector("i");
-    icon.classList.toggle("fa-moon");
-    icon.classList.toggle("fa-sun");
+    this.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
 };
-// استبدل سطر إنشاء الصف داخل updateUI بهذا السطر لإخفاء أزرار التعديل والحذف داخل الصورة المصدّرة:
-tableBody.innerHTML += `
-    <tr>
-        <td><strong>${sub.name}</strong></td>
-        <td>${sub.grade}</td>
-        <td><span class="badge ${info.badge}">${info.letter}</span></td>
-        <td>${sub.hours}</td>
-        <td>${qualityPoints}</td>
-        <td data-html2canvas-ignore="true">
-            <button class="action-btn btn-edit" onclick="editSubject(${index})" title="تعديل"><i class="fas fa-pen"></i></button>
-            <button class="action-btn btn-delete" onclick="deleteSubject(${index})" title="حذف"><i class="fas fa-trash"></i></button>
-        </td>
-    </tr>
-`;
 
-// وأضف هذا الكود في نهاية ملف script.js لتفعيل زر حفظ الصورة:
 document.getElementById("exportBtn").onclick = function() {
     if (subjects.length === 0) {
         alert("أضف مادة واحدة على الأقل لتتمكن من حفظ النتيجة كصورة!");
         return;
     }
 
+    if (typeof html2canvas === "undefined") {
+        alert("جاري تحميل أداة التصوير، يرجى المحاولة بعد ثوانٍ أو التأكد من اتصال الإنترنت.");
+        return;
+    }
+
     const btn = this;
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+    const originalText = btn.innerText;
+    btn.innerText = "⏳ جاري الحفظ...";
 
     const captureArea = document.getElementById("captureArea");
     html2canvas(captureArea, {
         scale: 2,
-        backgroundColor: null,
+        backgroundColor: document.body.classList.contains("dark-mode") ? "#1e293b" : "#ffffff",
         useCORS: true
     }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'GPA-Mari-University.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
-        btn.innerHTML = originalHTML;
+        btn.innerText = originalText;
+    }).catch(err => {
+        alert("حدث خطأ أثناء حفظ الصورة، حاول مرة أخرى.");
+        btn.innerText = originalText;
     });
 };
-
 
 updateUI();
