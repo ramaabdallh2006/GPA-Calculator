@@ -146,5 +146,45 @@ document.getElementById("themeBtn").onclick = function() {
     icon.classList.toggle("fa-moon");
     icon.classList.toggle("fa-sun");
 };
+// استبدل سطر إنشاء الصف داخل updateUI بهذا السطر لإخفاء أزرار التعديل والحذف داخل الصورة المصدّرة:
+tableBody.innerHTML += `
+    <tr>
+        <td><strong>${sub.name}</strong></td>
+        <td>${sub.grade}</td>
+        <td><span class="badge ${info.badge}">${info.letter}</span></td>
+        <td>${sub.hours}</td>
+        <td>${qualityPoints}</td>
+        <td data-html2canvas-ignore="true">
+            <button class="action-btn btn-edit" onclick="editSubject(${index})" title="تعديل"><i class="fas fa-pen"></i></button>
+            <button class="action-btn btn-delete" onclick="deleteSubject(${index})" title="حذف"><i class="fas fa-trash"></i></button>
+        </td>
+    </tr>
+`;
+
+// وأضف هذا الكود في نهاية ملف script.js لتفعيل زر حفظ الصورة:
+document.getElementById("exportBtn").onclick = function() {
+    if (subjects.length === 0) {
+        alert("أضف مادة واحدة على الأقل لتتمكن من حفظ النتيجة كصورة!");
+        return;
+    }
+
+    const btn = this;
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+    const captureArea = document.getElementById("captureArea");
+    html2canvas(captureArea, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'GPA-Mari-University.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        btn.innerHTML = originalHTML;
+    });
+};
+
 
 updateUI();
