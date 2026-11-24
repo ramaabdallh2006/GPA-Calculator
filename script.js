@@ -1,90 +1,47 @@
-let subjects = new Array();
-
-
+let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) || [];
 let editIndex = -1;
 
-// دالة تحويل العلامة المئوية وفق النظام الامتحاني الرسمي لجامعة ماري
+// تحويل العلامة وفق نظام جامعة ماري
 function getGlobalGrade(grade) {
-    if (grade >= 98) return { points: 4.00, letter: "A+" };
-    if (grade >= 95) return { points: 3.75, letter: "A" };
-    if (grade >= 90) return { points: 3.50, letter: "A-" };
-    if (grade >= 85) return { points: 3.25, letter: "B+" };
-    if (grade >= 80) return { points: 3.00, letter: "B" };
-    if (grade >= 75) return { points: 2.75, letter: "B-" };
-    if (grade >= 70) return { points: 2.50, letter: "C+" };
-    if (grade >= 65) return { points: 2.25, letter: "C" };
-    if (grade >= 60) return { points: 2.00, letter: "C-" };
-    if (grade >= 55) return { points: 1.75, letter: "D+ (نجاح مشروط)" };
-    if (grade >= 50) return { points: 1.50, letter: "D (نجاح مشروط)" };
-    return { points: 0.00, letter: "F (راسب)" };
+    if (grade >= 98) return { points: 4.00, letter: "A+", badge: "badge-a" };
+    if (grade >= 95) return { points: 3.75, letter: "A", badge: "badge-a" };
+    if (grade >= 90) return { points: 3.50, letter: "A-", badge: "badge-a" };
+    if (grade >= 85) return { points: 3.25, letter: "B+", badge: "badge-b" };
+    if (grade >= 80) return { points: 3.00, letter: "B", badge: "badge-b" };
+    if (grade >= 75) return { points: 2.75, letter: "B-", badge: "badge-b" };
+    if (grade >= 70) return { points: 2.50, letter: "C+", badge: "badge-c" };
+    if (grade >= 65) return { points: 2.25, letter: "C", badge: "badge-c" };
+    if (grade >= 60) return { points: 2.00, letter: "C-", badge: "badge-c" };
+    if (grade >= 55) return { points: 1.75, letter: "D+", badge: "badge-d" };
+    if (grade >= 50) return { points: 1.50, letter: "D", badge: "badge-d" };
+    return { points: 0.00, letter: "F", badge: "badge-f" };
 }
 
-function renderTable() {
-    let tableBody = document.getElementById("subjectsList");
+function getOverallStatus(gpa) {
+    if (gpa >= 3.75) return { text: "ممتاز مع مرتبة الشرف 🌟", color: "#10b981" };
+    if (gpa >= 3.25) return { text: "ممتاز 🔥", color: "#10b981" };
+    if (gpa >= 2.75) return { text: "جيد جداً 👏", color: "#3b82f6" };
+    if (gpa >= 2.25) return { text: "جيد 👍", color: "#0ea5e9" };
+    if (gpa >= 2.00) return { text: "مقبول (وضع سليم)", color: "#eab308" };
+    if (gpa > 0) return { text: "إنذار أكاديمي (تحت 2.00) ⚠️", color: "#ef4444" };
+    return { text: "بانتظار إدخال المواد", color: "#64748b" };
+}
+
+function updateUI() {
+    localStorage.setItem('mari_gpa_subjects', JSON.stringify(subjects));
+    const tableBody = document.getElementById("subjectsList");
     tableBody.innerHTML = "";
 
-    subjects.forEach((sub, index) => {
-        let globalInfo = getGlobalGrade(sub.grade);
-        let qualityPoints = (globalInfo.points * sub.hours).toFixed(2);
-
-        tableBody.innerHTML += `<tr>
-            <td>${sub.name}</td>
-            <td>${sub.grade} (${globalInfo.letter})</td>
-            <td>${sub.hours}</td>
-            <td>${qualityPoints}</td>
-            <td>
-                <button onclick="editSubject(${index})" style="background:#f39c12; padding:6px 12px; font-size:13px;">تعديل</button>
-                <button onclick="deleteSubject(${index})" style="background:#e74c3c; padding:6px 12px; font-size:13px;">حذف</button>
-            </td>
-        </tr>`;
-    });
-}
-
-document.getElementById("addBtn").onclick = function() {
-    let name = document.getElementById("subjectName").value;
-    let gradeText = document.getElementById("subjectGrade").value;
-    let hours = Number(document.getElementById("subjectHours").value);
-
-    if (name === "" || gradeText === "" || Number(gradeText) < 0 || Number(gradeText) > 100 || hours <= 0) {
-        alert("يرجى إدخال اسم المادة، علامة بين 0 و 100، وعدد الساعات!");
-        return;
-    }
-
-    let subjectData = { name: name, grade: Number(gradeText), hours: hours };
-
-    if (editIndex === -1) {
-        subjects.push(subjectData);
-    } else {
-        subjects[editIndex] = subjectData;
-        editIndex = -1;
-        document.getElementById("addBtn").innerText = "إضافة المادة";
-    }
-
-    renderTable();
-
-    document.getElementById("subjectName").value = "";
-    document.getElementById("subjectGrade").value = "";
-    document.getElementById("subjectHours").value = "";
-};
-
-function editSubject(index) {
-    let sub = subjects[index];
-    document.getElementById("subjectName").value = sub.name;
-    document.getElementById("subjectGrade").value = sub.grade;
-    document.getElementById("subjectHours").value = sub.hours;
-
-    editIndex = index;
-    document.getElementById("addBtn").innerText = "حفظ التعديل";
-}
-
-function deleteSubject(index) {
-    subjects.splice(index, 1);
-    renderTable();
-}
-
-document.getElementById("calcBtn").onclick = function() {
     if (subjects.length === 0) {
-        alert("أضيفي مادة واحدة على الأقل أولاً!");
+        tableBody.innerHTML = `<tr><td colspan="6" class="empty-state">لا توجد مواد مضافة بعد.. أضف مادتك الأولى بالأعلى 👆</td></tr>`;
+        document.getElementById("gpaValue").innerText = "0.00";
+        document.getElementById("gpaValue").style.color = "var(--primary)";
+        document.getElementById("percentValue").innerText = "0.0%";
+        document.getElementById("hoursValue").innerText = "0";
+        document.getElementById("gradeStatus").innerText = "بانتظار إدخال المواد";
+        document.getElementById("gradeStatus").style.color = "var(--text-muted)";
+        document.getElementById("progressBar").style.width = "0%";
+        document.getElementById("progressPercent").innerText = "0%";
         return;
     }
 
@@ -92,24 +49,102 @@ document.getElementById("calcBtn").onclick = function() {
     let totalQualityPoints = 0;
     let totalHours = 0;
 
-    subjects.forEach(sub => {
-        let info = getGlobalGrade(sub.grade);
+    subjects.forEach((sub, index) => {
+        const info = getGlobalGrade(sub.grade);
+        const qualityPoints = (info.points * sub.hours).toFixed(2);
+
         totalWeightedGrades += (sub.grade * sub.hours);
         totalQualityPoints += (info.points * sub.hours);
         totalHours += sub.hours;
+
+        tableBody.innerHTML += `
+            <tr>
+                <td><strong>${sub.name}</strong></td>
+                <td>${sub.grade}</td>
+                <td><span class="badge ${info.badge}">${info.letter}</span></td>
+                <td>${sub.hours}</td>
+                <td>${qualityPoints}</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="editSubject(${index})" title="تعديل"><i class="fas fa-pen"></i></button>
+                    <button class="action-btn btn-delete" onclick="deleteSubject(${index})" title="حذف"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `;
     });
 
-    let finalPercent = (totalWeightedGrades / totalHours).toFixed(2);
-    let globalGPA = (totalQualityPoints / totalHours).toFixed(2);
+    const finalPercent = (totalWeightedGrades / totalHours).toFixed(1);
+    const globalGPA = (totalQualityPoints / totalHours).toFixed(2);
+    const status = getOverallStatus(Number(globalGPA));
 
-    let status = "";
-    if (globalGPA >= 3.50) status = "ممتاز 🌟";
-    else if (globalGPA >= 3.00) status = "جيد جداً 👏";
-    else if (globalGPA >= 2.50) status = "جيد 👍";
-    else if (globalGPA >= 2.00) status = "مقبول (ناجح) 🙂";
-    else if (globalGPA >= 1.50) status = "نجاح مشروط ⚠️";
-    else status = "راسب ❌";
+    document.getElementById("gpaValue").innerText = globalGPA;
+    document.getElementById("gpaValue").style.color = status.color;
+    document.getElementById("percentValue").innerText = finalPercent + "%";
+    document.getElementById("hoursValue").innerText = totalHours;
 
-    document.getElementById("result").innerText = `المعدل المئوي: ${finalPercent}% | المعدل التراكمي (GPA): ${globalGPA} / 4.00`;
-    document.getElementById("gradeText").innerText = `التقدير العام: ${status}`;
+    const statusEl = document.getElementById("gradeStatus");
+    statusEl.innerText = status.text;
+    statusEl.style.color = status.color;
+
+    const barPercent = Math.min((globalGPA / 4) * 100, 100).toFixed(0);
+    const progressBar = document.getElementById("progressBar");
+    progressBar.style.width = barPercent + "%";
+    progressBar.style.backgroundColor = status.color;
+    document.getElementById("progressPercent").innerText = barPercent + "%";
+}
+
+document.getElementById("addBtn").onclick = function() {
+    const name = document.getElementById("subjectName").value.trim();
+    const gradeVal = document.getElementById("subjectGrade").value;
+    const hoursVal = document.getElementById("subjectHours").value;
+
+    if (!name || gradeVal === "" || Number(gradeVal) < 0 || Number(gradeVal) > 100 || Number(hoursVal) <= 0) {
+        alert("يرجى إدخال اسم المادة، وعلامة صحيحة بين 0 و 100، وعدد الساعات!");
+        return;
+    }
+
+    const subjectData = { name, grade: Number(gradeVal), hours: Number(hoursVal) };
+
+    if (editIndex === -1) {
+        subjects.push(subjectData);
+    } else {
+        subjects[editIndex] = subjectData;
+        editIndex = -1;
+        document.querySelector("#addBtn span").innerText = "إضافة";
+    }
+
+    document.getElementById("subjectName").value = "";
+    document.getElementById("subjectGrade").value = "";
+    document.getElementById("subjectHours").value = "";
+    updateUI();
 };
+
+function editSubject(index) {
+    const sub = subjects[index];
+    document.getElementById("subjectName").value = sub.name;
+    document.getElementById("subjectGrade").value = sub.grade;
+    document.getElementById("subjectHours").value = sub.hours;
+    editIndex = index;
+    document.querySelector("#addBtn span").innerText = "حفظ التعديل";
+    document.getElementById("subjectName").focus();
+}
+
+function deleteSubject(index) {
+    subjects.splice(index, 1);
+    updateUI();
+}
+
+document.getElementById("clearBtn").onclick = function() {
+    if (subjects.length > 0 && confirm("هل أنت متأكد من حذف جميع المواد؟")) {
+        subjects = [];
+        updateUI();
+    }
+};
+
+document.getElementById("themeBtn").onclick = function() {
+    document.body.classList.toggle("dark-mode");
+    const icon = this.querySelector("i");
+    icon.classList.toggle("fa-moon");
+    icon.classList.toggle("fa-sun");
+};
+
+updateUI();
