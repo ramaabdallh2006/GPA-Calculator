@@ -1,6 +1,7 @@
-let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) || [];
+let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) ||;
 let editIndex = -1;
 
+// تحويل العلامة المئوية وفق نظام جامعة ماري
 function getGlobalGrade(grade) {
     if (grade >= 98) return { points: 4.00, letter: "A+", badge: "badge-a" };
     if (grade >= 95) return { points: 3.75, letter: "A", badge: "badge-a" };
@@ -16,6 +17,7 @@ function getGlobalGrade(grade) {
     return { points: 0.00, letter: "F", badge: "badge-f" };
 }
 
+// تحديد التقدير العام واللون المناسب
 function getOverallStatus(gpa) {
     if (gpa >= 3.75) return { text: "ممتاز مع مرتبة الشرف 🌟", color: "#10b981" };
     if (gpa >= 3.25) return { text: "ممتاز 🔥", color: "#10b981" };
@@ -26,6 +28,7 @@ function getOverallStatus(gpa) {
     return { text: "بانتظار إدخال المواد", color: "#64748b" };
 }
 
+// تحديث الواجهة والجدول والنتائج
 function updateUI() {
     localStorage.setItem('mari_gpa_subjects', JSON.stringify(subjects));
     const tableBody = document.getElementById("subjectsList");
@@ -84,13 +87,14 @@ function updateUI() {
     statusEl.innerText = status.text;
     statusEl.style.color = status.color;
 
-    const barPercent = Math.min((globalGPA / 4) * 100, 100).toFixed(0);
+    const barPercent = Math.min(Number(finalPercent), 100).toFixed(0);
     const progressBar = document.getElementById("progressBar");
     progressBar.style.width = barPercent + "%";
     progressBar.style.backgroundColor = status.color;
     document.getElementById("progressPercent").innerText = barPercent + "%";
 }
 
+// زر إضافة أو حفظ التعديل
 document.getElementById("addBtn").onclick = function() {
     const name = document.getElementById("subjectName").value.trim();
     const gradeVal = document.getElementById("subjectGrade").value;
@@ -117,6 +121,7 @@ document.getElementById("addBtn").onclick = function() {
     updateUI();
 };
 
+// تعديل مادة
 function editSubject(index) {
     const sub = subjects[index];
     document.getElementById("subjectName").value = sub.name;
@@ -127,23 +132,27 @@ function editSubject(index) {
     document.getElementById("subjectName").focus();
 }
 
+// حذف مادة
 function deleteSubject(index) {
     subjects.splice(index, 1);
     updateUI();
 }
 
+// مسح جميع المواد
 document.getElementById("clearBtn").onclick = function() {
     if (subjects.length > 0 && confirm("هل أنت متأكد من حذف جميع المواد؟")) {
-        subjects = [];
+        subjects =;
         updateUI();
     }
 };
 
+// تبديل الوضع الليلي
 document.getElementById("themeBtn").onclick = function() {
     document.body.classList.toggle("dark-mode");
     this.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
 };
 
+// حفظ النتيجة كصورة
 document.getElementById("exportBtn").onclick = function() {
     if (subjects.length === 0) {
         alert("أضف مادة واحدة على الأقل لتتمكن من حفظ النتيجة كصورة!");
@@ -151,7 +160,7 @@ document.getElementById("exportBtn").onclick = function() {
     }
 
     if (typeof html2canvas === "undefined") {
-        alert("جاري تحميل أداة التصوير، يرجى المحاولة بعد ثوانٍ أو التأكد من اتصال الإنترنت.");
+        alert("تعذر تحميل أداة التصوير، تأكد من اتصال الإنترنت وحدّث الصفحة.");
         return;
     }
 
@@ -170,10 +179,11 @@ document.getElementById("exportBtn").onclick = function() {
         link.href = canvas.toDataURL('image/png');
         link.click();
         btn.innerText = originalText;
-    }).catch(err => {
-        alert("حدث خطأ أثناء حفظ الصورة، حاول مرة أخرى.");
+    }).catch(() => {
+        alert("حدث خطأ أثناء حفظ الصورة.");
         btn.innerText = originalText;
     });
 };
 
+// تشغيل التحديث الأولي عند فتح الصفحة
 updateUI();
