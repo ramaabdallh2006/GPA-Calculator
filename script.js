@@ -4,15 +4,18 @@ let totalHours = 0;          // لمجموع الساعات المعتمدة
 
 // 1. دالة تحويل العلامة المئوية إلى نقاط ورمز عالمي (نظام 4.0 القياسي)
 function getGlobalGrade(grade) {
-    if (grade >= 90) return { points: 4.0, letter: "A" };
-    if (grade >= 85) return { points: 3.7, letter: "A-" };
-    if (grade >= 80) return { points: 3.3, letter: "B+" };
-    if (grade >= 75) return { points: 3.0, letter: "B" };
-    if (grade >= 70) return { points: 2.7, letter: "B-" };
-    if (grade >= 65) return { points: 2.3, letter: "C+" };
-    if (grade >= 60) return { points: 2.0, letter: "C" };
-    if (grade >= 50) return { points: 1.0, letter: "D" };
-    return { points: 0.0, letter: "F" }; // راسب
+   if (grade >= 98) return { points: 4.00, letter: "A+" };
+    if (grade >= 95) return { points: 3.75, letter: "A" };
+    if (grade >= 90) return { points: 3.50, letter: "A-" };
+    if (grade >= 85) return { points: 3.25, letter: "B+" };
+    if (grade >= 80) return { points: 3.00, letter: "B" };
+    if (grade >= 75) return { points: 2.75, letter: "B-" };
+    if (grade >= 70) return { points: 2.50, letter: "C+" };
+    if (grade >= 65) return { points: 2.25, letter: "C" };
+    if (grade >= 60) return { points: 2.00, letter: "C-" };
+    if (grade >= 55) return { points: 1.75, letter: "D+ (نجاح مشروط)" };
+    if (grade >= 50) return { points: 1.50, letter: "D (نجاح مشروط)" };
+    return { points: 0.00, letter: "F (راسب)" };
 }
 
 document.getElementById("addBtn").onclick = function () {
@@ -60,11 +63,16 @@ document.getElementById("calcBtn").onclick = function () {
 
     // تحديد التقدير العام
     let status = "";
-    if (globalGPA >= 3.7) status = "ممتاز مع مرتبة الشرف 🌟";
-    else if (globalGPA >= 3.0) status = "جيد جداً 👏";
-    else if (globalGPA >= 2.3) status = "جيد 👍";
-    else if (globalGPA >= 2.0) status = "مقبول 🙂";
-    else status = "إنذار أكاديمي / راسب ❌";
+    if (globalGPA >= 3.50) status = "ممتاز 🌟";
+    else if (globalGPA >= 3.00) status = "جيد جداً 👏";
+    else if (globalGPA >= 2.50) status = "جيد 👍";
+    else if (globalGPA >= 2.00) status = "مقبول (ناجح) 🙂";
+    else if (globalGPA >= 1.50) status = "نجاح مشروط ⚠️";
+    else status = "راسب ❌";
+
+
+
+
 
     document.getElementById("result").innerText = `المعدل المئوي: ${finalPercent}% | المعدل التراكمي (GPA): ${globalGPA} / 4.0`;
     document.getElementById("gradeText").innerText = `التقدير العام: ${status}`;
