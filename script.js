@@ -1,4 +1,4 @@
-let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) ||;
+let subjects = JSON.parse(localStorage.getItem('mari_gpa_subjects')) || [];
 let editIndex = -1;
 
 // تحويل العلامة المئوية وفق نظام جامعة ماري
@@ -60,7 +60,6 @@ function updateUI() {
         totalHours += sub.hours;
 
         tableBody.innerHTML += `
-                    tableBody.innerHTML += `
             <tr>
                 <td><strong>${sub.name}</strong></td>
                 <td>${sub.grade}</td>
@@ -73,7 +72,7 @@ function updateUI() {
                 </td>
             </tr>
         `;
-
+    });
 
     const finalPercent = (totalWeightedGrades / totalHours).toFixed(1);
     const globalGPA = (totalQualityPoints / totalHours).toFixed(2);
@@ -142,7 +141,7 @@ function deleteSubject(index) {
 // مسح جميع المواد
 document.getElementById("clearBtn").onclick = function() {
     if (subjects.length > 0 && confirm("هل أنت متأكد من حذف جميع المواد؟")) {
-        subjects =;
+        subjects = [];
         updateUI();
     }
 };
