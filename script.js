@@ -60,6 +60,7 @@ function updateUI() {
         totalHours += sub.hours;
 
         tableBody.innerHTML += `
+                    tableBody.innerHTML += `
             <tr>
                 <td><strong>${sub.name}</strong></td>
                 <td>${sub.grade}</td>
@@ -72,7 +73,7 @@ function updateUI() {
                 </td>
             </tr>
         `;
-    });
+
 
     const finalPercent = (totalWeightedGrades / totalHours).toFixed(1);
     const globalGPA = (totalQualityPoints / totalHours).toFixed(2);
