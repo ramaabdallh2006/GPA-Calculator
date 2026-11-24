@@ -1,4 +1,5 @@
-let subjects = [];
+let subjects = new Array();
+
 
 let editIndex = -1;
 
