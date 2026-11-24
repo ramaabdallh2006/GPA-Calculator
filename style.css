@@ -1,156 +1,308 @@
-@import url('https://googleapis.com');
+:root {
+    --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    --card-bg: #ffffff;
+    --text-main: #102a43;
+    --text-muted: #627d98;
+    --border-color: #e2e8f0;
+    --input-bg: #f8fafc;
+    --primary: #1e3799;
+    --primary-hover: #0c2461;
+    --row-hover: #f1f5f9;
+}
+
+body.dark-mode {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --row-hover: #273549;
+}
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, #eef2f3 0%, #d9e2ec 100%);
-    margin: 0;
-    padding: 25px 15px;
-    color: #102a43;
-    text-align: center;
+    background: var(--bg-gradient);
+    color: var(--text-main);
     min-height: 100vh;
+    padding: 25px 15px;
+    transition: all 0.3s ease;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
-    background: #ffffff;
-    padding: 35px 25px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(16, 42, 67, 0.1);
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border-color);
 }
 
-/* ترويسة الجامعة */
+/* الترويسة */
 .uni-header {
-    background: linear-gradient(135deg, #1e3799, #0c2461);
+    background: linear-gradient(135deg, #1e3799 0%, #0c2461 100%);
     color: white;
-    padding: 20px;
-    border-radius: 14px;
+    padding: 25px;
+    border-radius: 18px;
     margin-bottom: 25px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(30, 55, 153, 0.25);
 }
 
 .uni-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #ffffff;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 5px;
 }
 
 .uni-header p {
-    margin: 6px 0 0;
     font-size: 14px;
-    color: #d1d8e0;
+    color: #cbd5e1;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(15deg);
+}
+
+/* بطاقات الإحصائيات */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    padding: 18px;
+    border-radius: 16px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card span {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.stat-card strong {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+/* شريط التقدم */
+.progress-wrapper {
+    margin-bottom: 25px;
+    background: var(--input-bg);
+    padding: 15px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 12px;
+    background: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: #20bf6b;
+    border-radius: 10px;
+    transition: width 0.5s ease, background-color 0.5s ease;
 }
 
 /* حقول الإدخال */
-.input-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
+.input-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 700px) {
+    .input-section {
+        grid-template-columns: 1fr;
+    }
 }
 
 input {
     font-family: 'Cairo', sans-serif;
-    padding: 12px 15px;
-    border: 1.5px solid #bcccdc;
-    border-radius: 10px;
-    width: 210px;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-main);
+    border-radius: 12px;
     font-size: 14px;
     transition: 0.3s;
 }
 
 input:focus {
-    border-color: #1e3799;
+    border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 55, 153, 0.15);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-/* الأزرار */
-button {
+.btn-primary {
     font-family: 'Cairo', sans-serif;
-    padding: 12px 24px;
+    background: var(--primary);
+    color: white;
     border: none;
-    border-radius: 10px;
-    cursor: pointer;
+    padding: 13px 24px;
+    border-radius: 12px;
     font-weight: 700;
     font-size: 15px;
-    transition: all 0.25s ease;
-    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-button:hover {
+.btn-primary:hover {
+    background: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
-}
-
-.add-btn {
-    background-color: #1e3799;
-    width: 260px;
-}
-
-#calcBtn {
-    background-color: #20bf6b;
-    width: 290px;
-    font-size: 16px;
-    margin-top: 10px;
 }
 
 /* الجدول */
-table {
-    margin: 25px auto;
-    border-collapse: collapse;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
 }
 
-th, td {
-    padding: 14px 8px;
-    border-bottom: 1px solid #f0f4f8;
-    text-align: center;
-    font-size: 14px;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
 th {
-    background-color: #243b53;
+    background: #1e293b;
     color: white;
+    padding: 14px 10px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+td {
+    padding: 14px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
 }
 
 tr:hover {
-    background-color: #f8fafc;
+    background: var(--row-hover);
 }
 
-/* بطاقة النتيجة النهائية */
-.result-box {
-    background-color: #f0f4f8;
-    border-right: 5px solid #20bf6b;
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-top: 25px;
+/* شارات التقدير */
+.badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
 }
+.badge-a { background: #dcfce7; color: #15803d; }
+.badge-b { background: #dbeafe; color: #1d4ed8; }
+.badge-c { background: #fef9c3; color: #a16207; }
+.badge-d { background: #ffedd5; color: #c2410c; }
+.badge-f { background: #fee2e2; color: #b91c1c; }
 
-#result {
-    color: #102a43;
-    margin: 0 0 8px;
-    font-size: 20px;
-}
-
-#gradeText {
-    color: #20bf6b;
-    margin: 0;
-    font-size: 18px;
-}
-
-/* تذييل الحقوق */
-.footer {
-    margin-top: 30px;
+.action-btn {
+    border: none;
+    padding: 7px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
     font-size: 13px;
-    color: #627d98;
-    border-top: 1px solid #f0f4f8;
+    margin: 0 2px;
+    transition: 0.2s;
+}
+.btn-edit { background: #f59e0b; }
+.btn-delete { background: #ef4444; }
+.action-btn:hover { opacity: 0.85; transform: scale(1.05); }
+
+.empty-state {
+    text-align: center;
+    padding: 35px;
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+.footer-bar {
+    margin-top: 25px;
     padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.btn-clear {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    transition: 0.2s;
+}
+.btn-clear:hover {
+    background: #ef4444;
+    color: white;
 }
