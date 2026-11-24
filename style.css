@@ -306,3 +306,29 @@ tr:hover {
     background: #ef4444;
     color: white;
 }
+.footer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-export {
+    background: #10b981;
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-export:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
