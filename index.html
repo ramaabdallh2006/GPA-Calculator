@@ -4,30 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حاسبة المعدل التراكمي - جامعة ماري</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- ترويسة الجامعة -->
-        <div class="uni-header">
-            <h1>حاسبة المعدل التراكمي (GPA)</h1>
-            <p>جامعة ماري – وفق النظام الامتحاني والساعات المعتمدة</p>
-        </div>
 
-        <!-- حقول الإدخال -->
-        <div class="input-group">
-            <input type="text" id="subjectName" placeholder="اسم المادة (مثلاً: برمجة 2)">
-            <input type="number" id="subjectGrade" placeholder="العلامة (من 100)" min="0" max="100">
-            <input type="number" id="subjectHours" placeholder="عدد الساعات" min="1" max="6">
-        </div>
-        <button id="addBtn" class="add-btn">إضافة المادة</button>
+<div class="container">
+    <!-- ترويسة الجامعة -->
+    <div class="uni-header">
+        <button class="theme-toggle" id="themeBtn" title="تبديل الوضع الليلي">
+            <i class="fas fa-moon"></i>
+        </button>
+        <h1><i class="fas fa-graduation-cap"></i> حاسبة المعدل التراكمي (GPA)</h1>
+        <p>جامعة ماري الخاصة – وفق النظام الامتحاني والساعات المعتمدة</p>
+    </div>
 
-        <!-- جدول المواد -->
+    <!-- بطاقات الإحصائيات الفورية -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>المعدل التراكمي (من 4.00)</span>
+            <strong id="gpaValue">0.00</strong>
+        </div>
+        <div class="stat-card">
+            <span>المعدل المئوي (%)</span>
+            <strong id="percentValue">0.0%</strong>
+        </div>
+        <div class="stat-card">
+            <span>مجموع الساعات</span>
+            <strong id="hoursValue">0</strong>
+        </div>
+    </div>
+
+    <!-- شريط التقدم والتقدير -->
+    <div class="progress-wrapper">
+        <div class="progress-header">
+            <span>التقدير العام: <span id="gradeStatus">بانتظار إدخال المواد</span></span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- حقول الإدخال -->
+    <div class="input-section">
+        <input type="text" id="subjectName" placeholder="اسم المادة (مثلاً: برمجة 2)">
+        <input type="number" id="subjectGrade" placeholder="العلامة (0 - 100)" min="0" max="100">
+        <input type="number" id="subjectHours" placeholder="الساعات (1 - 6)" min="1" max="6">
+        <button id="addBtn" class="btn-primary">
+            <i class="fas fa-plus"></i> <span>إضافة</span>
+        </button>
+    </div>
+
+    <!-- جدول المواد -->
+    <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
                     <th>المادة</th>
                     <th>العلامة</th>
+                    <th>التقدير</th>
                     <th>الساعات</th>
                     <th>النقاط</th>
                     <th>إجراءات</th>
@@ -35,21 +72,15 @@
             </thead>
             <tbody id="subjectsList"></tbody>
         </table>
-
-        <!-- زر الحساب وصندوق النتيجة -->
-        <button id="calcBtn">احسب المعدل التراكمي</button>
-        <div class="result-box">
-            <h2 id="result">المعدل: --</h2>
-            <h3 id="gradeText">التقدير: --</h3>
-        </div>
-
-        <!-- توقيع المطورة -->
-        <div class="footer">
-            تصميم وبرمجة: – قسم الهندسة المعلوماتية 💻
-        </div>
     </div>
 
-    <!-- ربط ملف الجافاسكربت الخارجي -->
-    <script src="script.js"></script>
+    <!-- التذييل -->
+    <div class="footer-bar">
+        <span>تصميم وبرمجة: قسم الهندسة المعلوماتية – جامعة ماري 💻</span>
+        <button class="btn-clear" id="clearBtn"><i class="fas fa-trash-alt"></i> مسح جميع المواد</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
