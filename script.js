@@ -144,36 +144,92 @@ document.getElementById("themeBtn").onclick = function() {
     this.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
 };
 
+// حفظ النتيجة كصورة احترافية مباشرة بدون مكتبات خارجية (تعمل 100% دائماً)
 document.getElementById("exportBtn").onclick = function() {
     if (subjects.length === 0) {
         alert("أضف مادة واحدة على الأقل لتتمكن من حفظ النتيجة كصورة!");
         return;
     }
 
-    if (typeof html2canvas === "undefined") {
-        alert("تعذر تحميل أداة التصوير، تأكد من اتصال الإنترنت وحدّث الصفحة.");
-        return;
-    }
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-    const btn = this;
-    const originalText = btn.innerText;
-    btn.innerText = "⏳ جاري الحفظ...";
+    const width = 800;
+    const rowHeight = 48;
+    const height = 360 + (subjects.length * rowHeight);
+    canvas.width = width;
+    canvas.height = height;
 
-    const captureArea = document.getElementById("captureArea");
-    html2canvas(captureArea, {
-        scale: 2,
-        backgroundColor: document.body.classList.contains("dark-mode") ? "#1e293b" : "#ffffff",
-        useCORS: true
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'GPA-Mari-University.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        btn.innerText = originalText;
-    }).catch(() => {
-        alert("حدث خطأ أثناء حفظ الصورة.");
-        btn.innerText = originalText;
+    // الخلفية
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    // الترويسة الزرقاء
+    const grad = ctx.createLinearGradient(0, 0, width, 130);
+    grad.addColorStop(0, "#1e3799");
+    grad.addColorStop(1, "#0c2461");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, 130);
+
+    // عنوان الترويسة
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 28px Cairo, Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("كشف المعدل التراكمي (GPA)", width / 2, 55);
+    ctx.font = "16px Cairo, Arial, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillText("جامعة ماري الخاصة – قسم الهندسة المعلوماتية", width / 2, 95);
+
+    // ملخص النتائج
+    const gpa = document.getElementById("gpaValue").innerText;
+    const percent = document.getElementById("percentValue").innerText;
+    const hours = document.getElementById("hoursValue").innerText;
+
+    ctx.fillStyle = "#f1f5f9";
+    ctx.fillRect(40, 150, width - 80, 80);
+
+    ctx.fillStyle = "#1e3799";
+    ctx.font = "bold 22px Cairo, Arial, sans-serif";
+    ctx.fillText(`المعدل: ${gpa} / 4.00   |   النسبة: ${percent}   |   الساعات: ${hours}`, width / 2, 198);
+
+    // رأس الجدول
+    let y = 260;
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(40, y, width - 80, 42);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 16px Cairo, Arial, sans-serif";
+    ctx.fillText("المادة", 630, y + 27);
+    ctx.fillText("العلامة", 420, y + 27);
+    ctx.fillText("التقدير", 270, y + 27);
+    ctx.fillText("الساعات", 120, y + 27);
+
+    // صفوف المواد
+    y += 42;
+    subjects.forEach((sub, i) => {
+        const info = getGlobalGrade(sub.grade);
+        ctx.fillStyle = i % 2 === 0 ? "#ffffff" : "#f8fafc";
+        ctx.fillRect(40, y, width - 80, rowHeight);
+
+        ctx.fillStyle = "#102a43";
+        ctx.font = "16px Cairo, Arial, sans-serif";
+        ctx.fillText(sub.name, 630, y + 30);
+        ctx.fillText(String(sub.grade), 420, y + 30);
+        ctx.fillText(info.letter, 270, y + 30);
+        ctx.fillText(String(sub.hours), 120, y + 30);
+        y += rowHeight;
     });
+
+    // التذييل وتوقيعك
+    ctx.fillStyle = "#64748b";
+    ctx.font = "14px Cairo, Arial, sans-serif";
+    ctx.fillText("تم الحساب عبر حاسبة جامعة ماري – تصميم وبرمجة: راما عبدالله 💻", width / 2, height - 25);
+
+    // تنزيل الصورة فوراً
+    const link = document.createElement("a");
+    link.download = "GPA-Mari-University.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 };
+
 
 updateUI();
